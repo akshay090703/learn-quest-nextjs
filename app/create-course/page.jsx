@@ -11,14 +11,24 @@ import SelectCategory from "./_components/SelectCategory";
 import TopicDescription from "./_components/TopicDescription";
 import SelectOptions from "./_components/SelectOptions";
 import { UserInputContext } from "../_context/UserInputContext";
+import { AiGenerateCourseLayout } from "@/config/AiModel";
+import LoadingDialog from "./_components/LoadingDialog";
+import { db } from "@/config/db";
+import { CourseList } from "@/config/schema";
+import uuid4 from "uuid4";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const CreateCourse = () => {
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const { user } = useUser();
+  const router = useRouter();
 
-  useEffect(() => {
-    console.log(userCourseInput);
-  }, [userCourseInput]);
+  // useEffect(() => {
+  //   console.log(userCourseInput);
+  // }, [userCourseInput]);
 
   // Used to check if the next button should be enabled or not
   const checkStatus = () => {
@@ -53,6 +63,43 @@ const CreateCourse = () => {
     }
 
     return false;
+  };
+
+  const GenerateCourseLayout = async () => {
+    setLoading(true);
+
+    const PROMPT = `Generate A Course Tutorial on following details with field as Course Name, Description, Along with chapter name, about, Duration:
+Category: ${userCourseInput?.category}, Topic: ${userCourseInput?.topic}, Level: ${userCourseInput?.level}, Duration: ${userCourseInput?.duration}, NoOfChapters: ${userCourseInput?.noOfChapters}. in JSON format
+return only the json response, so that i can use it in my webapp
+The json format should be like the following:
+{course: 1. name 2. description 3. chapters -> (a) name (b) about (c) duration 4. category 5. topic 6. level 7. duration 8. noOfChapters }`;
+
+    console.log(PROMPT);
+    const result = await AiGenerateCourseLayout.sendMessage(PROMPT);
+
+    console.log(JSON.parse(result.response?.text()));
+    setLoading(false);
+
+    saveCourseLayoutInDb(JSON.parse(result.response?.text()));
+  };
+
+  const saveCourseLayoutInDb = async (courseLayout) => {
+    setLoading(true);
+    const id = uuid4();
+
+    const result = await db.insert(CourseList).values({
+      courseId: id,
+      name: userCourseInput?.topic,
+      level: userCourseInput?.level,
+      category: userCourseInput?.category,
+      courseOutput: courseLayout,
+      createdBy: user?.primaryEmailAddress?.emailAddress,
+      username: user?.fullName,
+      userProfileImage: user?.imageUrl,
+    });
+
+    setLoading(false);
+    router.replace("/create-course/" + id);
   };
 
   const StepperOptions = [
@@ -133,10 +180,16 @@ const CreateCourse = () => {
             </Button>
           )}
           {activeIndex == 2 && (
-            <Button disabled={checkStatus()}>Generate Course Layout</Button>
+            <Button
+              disabled={checkStatus()}
+              onClick={() => GenerateCourseLayout()}
+            >
+              Generate Course Layout
+            </Button>
           )}
         </div>
       </div>
+      <LoadingDialog loading={loading} />
     </div>
   );
 };
