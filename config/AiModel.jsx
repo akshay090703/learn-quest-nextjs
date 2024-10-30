@@ -41,5 +41,27 @@ export const AiGenerateCourseLayout = model.startChat({
   ],
 });
 
+export const AiGenerateChapterContent = model.startChat({
+  generationConfig,
+  history: [
+    {
+      role: "user",
+      parts: [
+        {
+          text: "Explain the concept in Detail on Topic: Designing using Figma, Chapter:Introduction to the World of Figma, in JSON Format with list of array with field as title, explanation on given chapter in detail, Code Example(Code field in <precode> format) if applicable",
+        },
+      ],
+    },
+    {
+      role: "model",
+      parts: [
+        {
+          text: '```json\n[\n  {\n    "title": "Introduction to Figma",\n    "explanation": "Figma is a powerful and versatile design tool that allows users to create professional-looking designs for websites, mobile apps, and other digital products. It is a web-based application, meaning that it can be accessed from any device with an internet connection. Figma offers a wide range of features, including vector editing, prototyping, collaboration tools, and a vast library of pre-made components.",\n    "code": ""\n  },\n  {\n    "title": "Key Features of Figma",\n    "explanation": "Figma\'s key features include:\\n\\n* **Vector Editing:** Figma allows users to create and edit vector graphics, which can be scaled to any size without losing quality. This makes it ideal for designing icons, logos, and other elements that need to be easily resized.\\n* **Prototyping:** Figma enables designers to create interactive prototypes that simulate the user experience of a website or app. This allows users to test their designs and get feedback before development begins.\\n* **Collaboration Tools:** Figma offers powerful collaboration tools that allow teams to work together on designs in real-time. This includes features like shared workspaces, version history, and comments.\\n* **Component Library:** Figma provides a built-in component library that allows users to create and reuse design elements. This helps to ensure consistency across projects and speeds up the design process.\\n* **Plugins and Integrations:** Figma has a robust plugin ecosystem that allows users to extend its functionality. There are plugins for everything from design automation to data visualization.",\n    "code": ""\n  },\n  {\n    "title": "Benefits of Using Figma",\n    "explanation": "There are numerous benefits to using Figma, including:\\n\\n* **Accessibility:** Figma is a web-based application, making it accessible from any device with an internet connection.\\n* **Collaboration:** Figma\'s collaborative features make it easy for teams to work together on designs in real-time.\\n* **Versatility:** Figma is a versatile tool that can be used for a wide range of design tasks.\\n* **Affordable:** Figma offers a free plan that provides access to many of its core features. It also has paid plans for teams and organizations.\\n* **User-Friendly:** Figma is designed to be intuitive and easy to use, even for beginners.",\n    "code": ""\n  },\n  {\n    "title": "Getting Started with Figma",\n    "explanation": "To get started with Figma, you will need to create a free account. Once you have an account, you can access the Figma editor, where you can create new projects, open existing projects, and explore the various features of the application.",\n    "code": ""\n  },\n  {\n    "title": "Figma\'s User Interface",\n    "explanation": "Figma\'s user interface is organized into several key areas:\\n\\n* **Canvas:** The canvas is the main area where you create your designs.\\n* **Toolbar:** The toolbar contains a variety of tools for drawing, editing, and manipulating objects.\\n* **Layers Panel:** The layers panel shows a hierarchical list of all the objects in your design.\\n* **Design Panel:** The design panel allows you to change the properties of selected objects.\\n* **Prototype Panel:** The prototype panel is where you create and edit interactive prototypes.",\n    "code": ""\n  }\n]\n```',
+        },
+      ],
+    },
+  ],
+});
+
 //   const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
 //   console.log(result.response.text());

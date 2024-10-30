@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider, GoogleOneTap } from "@clerk/nextjs";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
           // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
           className={outift.className}
         >
+          <Toaster position="top-center" />
           {children}
         </body>
       </html>
