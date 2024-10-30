@@ -10,8 +10,9 @@ import { storage } from "@/config/firebaseConfig";
 import { db } from "@/config/db";
 import { CourseList } from "@/config/schema";
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 
-const CourseBasicInfo = ({ course, refreshData }) => {
+const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
   const [selectedFile, setSelectedFile] = useState();
 
   useEffect(() => {
@@ -53,10 +54,12 @@ const CourseBasicInfo = ({ course, refreshData }) => {
             {course?.courseOutput?.course?.name}
             {"  "}
             <span className="text-xl">
-              <EditCourseBasicInfo
-                course={course}
-                refreshData={() => refreshData(true)}
-              />
+              {edit && (
+                <EditCourseBasicInfo
+                  course={course}
+                  refreshData={() => refreshData(true)}
+                />
+              )}
             </span>
           </h2>
           <p className="text-sm text-gray-400 mt-3">
@@ -65,7 +68,11 @@ const CourseBasicInfo = ({ course, refreshData }) => {
           <h2 className="font-medium mt-2 flex gap-2 items-center text-primary">
             <HiOutlinePuzzle /> {course?.category}
           </h2>
-          <Button className="w-full mt-10">Start</Button>
+          {!edit && (
+            <Link href={"/course/" + course?.courseId + "/start"}>
+              <Button className="w-full mt-10">Start</Button>
+            </Link>
+          )}
         </div>
         <div>
           <label htmlFor="upload-file">
@@ -77,12 +84,14 @@ const CourseBasicInfo = ({ course, refreshData }) => {
               alt="upload image"
             />
           </label>
-          <input
-            type="file"
-            id="upload-file"
-            className="opacity-0"
-            onChange={onFileSelected}
-          />
+          {edit && (
+            <input
+              type="file"
+              id="upload-file"
+              className="opacity-0"
+              onChange={onFileSelected}
+            />
+          )}
         </div>
       </div>
     </div>
