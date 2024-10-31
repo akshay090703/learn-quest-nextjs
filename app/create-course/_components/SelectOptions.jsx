@@ -59,9 +59,9 @@ const SelectOptions = () => {
             <SelectContent>
               <SelectItem value="1 Hour">1 Hour</SelectItem>
               <SelectItem value="2 Hours">2 Hours</SelectItem>
-              <SelectItem value="More than 3 Hours">
+              {/* <SelectItem value="More than 3 Hours">
                 More than 3 Hours
-              </SelectItem>
+              </SelectItem> */}
             </SelectContent>
           </Select>
         </div>
@@ -89,14 +89,30 @@ const SelectOptions = () => {
           <label htmlFor="chapters" className="text-sm">
             🎞️ No of Chapters
           </label>
-          <Input
+          {/* <Input
             id="chapters"
             type="number"
             min="1"
             max="10"
             onChange={(e) => handleInputChange("noOfChapters", e.target.value)}
             defaultValue={userCourseInput?.noOfChapters}
-          />
+          /> */}
+          <Select
+            id="chapters"
+            onValueChange={(value) => handleInputChange("noOfChapters", value)}
+            defaultValue={userCourseInput?.noOfChapters}
+          >
+            <SelectTrigger className="">
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1</SelectItem>
+              <SelectItem value="2">2</SelectItem>
+              <SelectItem value="3">3</SelectItem>
+              <SelectItem value="4">4</SelectItem>
+              <SelectItem value="5">5</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>

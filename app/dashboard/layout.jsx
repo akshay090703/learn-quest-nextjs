@@ -1,12 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "./_components/SideBar";
 import Header from "./_components/Header";
 import { UserCourseListContext } from "../_context/UserCourseListContext";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const DashboardLayout = ({ children }) => {
   const [userCourseList, setUserCourseList] = useState([]);
+  const { user } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.replace("/");
+    }
+  }, []);
 
   return (
     <UserCourseListContext.Provider

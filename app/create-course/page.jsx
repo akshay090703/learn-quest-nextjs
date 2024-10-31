@@ -96,6 +96,7 @@ The json format should be like the following:
       createdBy: user?.primaryEmailAddress?.emailAddress,
       username: user?.fullName,
       userProfileImage: user?.imageUrl,
+      includeVideo: userCourseInput?.displayVideo,
     });
 
     setLoading(false);

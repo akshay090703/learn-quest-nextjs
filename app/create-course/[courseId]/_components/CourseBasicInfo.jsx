@@ -70,7 +70,7 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
           </h2>
           {!edit && (
             <Link href={"/course/" + course?.courseId + "/start"}>
-              <Button className="w-full mt-10">Start</Button>
+              <Button className="w-full mt-10 mb-4">Start</Button>
             </Link>
           )}
         </div>
