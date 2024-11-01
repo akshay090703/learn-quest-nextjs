@@ -27,7 +27,7 @@ const SelectCategory = () => {
             className={`flex flex-col p-5 border items-center rounded-xl hover:border-primary hover:bg-blue-50 cursor-pointer ${
               userCourseInput?.category == item.name
                 ? "border-primary bg-blue-50 dark:bg-blue-700 dark:border-blue-500"
-                : "dark:border-gray-700 dark:bg-gray-800"
+                : "dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-blue-700"
             }`}
             onClick={() => handleCategoryChange(item.name)}
           >
