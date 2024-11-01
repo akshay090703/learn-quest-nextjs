@@ -8,14 +8,14 @@ import { useRouter } from "next/navigation";
 
 const CreateCourseLayout = ({ children }) => {
   const [userCourseInput, setUserCourseInput] = useState([]);
-  const { user } = useUser();
+  const user = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
-      router.replace("/");
+    if (user?.isLoaded && !user?.isSignedIn) {
+      router.push("/");
     }
-  }, []);
+  }, [user, router]);
 
   return (
     <div>

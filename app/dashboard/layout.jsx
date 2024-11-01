@@ -9,14 +9,14 @@ import { useRouter } from "next/navigation";
 
 const DashboardLayout = ({ children }) => {
   const [userCourseList, setUserCourseList] = useState([]);
-  const { user } = useUser();
+  const user = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
-      router.replace("/");
+    if (user?.isLoaded && !user?.isSignedIn) {
+      router.push("/");
     }
-  }, []);
+  }, [user, router]);
 
   return (
     <UserCourseListContext.Provider
