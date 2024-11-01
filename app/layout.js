@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider, GoogleOneTap } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,15 +26,22 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         {/* <GoogleOneTap /> */}
-        <body
-          // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          className={outift.className}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
-          <Toaster position="top-center" />
-          {children}
-        </body>
+          <body
+            // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            className={outift.className}
+          >
+            <Toaster position="top-center" />
+            {children}
+          </body>
+        </ThemeProvider>
       </html>
     </ClerkProvider>
   );

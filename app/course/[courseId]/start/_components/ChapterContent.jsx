@@ -18,7 +18,7 @@ const ChapterContent = ({ chapter, content }) => {
   const router = useRouter();
 
   return (
-    <div className="p-10">
+    <div className="p-10 dark:bg-gray-800">
       {/* Back Button */}
       <button
         onClick={() => router.back()}
@@ -27,8 +27,10 @@ const ChapterContent = ({ chapter, content }) => {
         <IoMdArrowRoundBack className="text-primary text-2xl" /> Back
       </button>
 
-      <h2 className="font-medium text-2xl">{chapter?.name}</h2>
-      <p className="text-gray-500 ">{chapter?.about}</p>
+      <h2 className="font-medium text-2xl text-foreground dark:text-gray-200">
+        {chapter?.name}
+      </h2>
+      <p className="text-gray-500 dark:text-gray-400">{chapter?.about}</p>
 
       {/* Video */}
       <div className="flex justify-center my-6">
@@ -36,10 +38,15 @@ const ChapterContent = ({ chapter, content }) => {
       </div>
 
       {/* Content */}
-      <div className="">
+      <div>
         {content?.content?.map((item, index) => (
-          <div className="p-5 bg-sky-50 mb-3 rounded-lg" key={index}>
-            <h2 className="font-medium text-lg mb-2">{item?.title}</h2>
+          <div
+            className="p-5 bg-sky-50 mb-3 rounded-lg dark:bg-gray-700"
+            key={index}
+          >
+            <h2 className="font-medium text-lg mb-2 text-foreground dark:text-gray-200">
+              {item?.title}
+            </h2>
             <ReactMarkdown>{item?.explanation}</ReactMarkdown>
             {item?.code && (
               <div className="p-4 bg-black text-white rounded-md mt-3">

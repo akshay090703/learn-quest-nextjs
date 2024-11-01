@@ -10,14 +10,14 @@ const ChapterList = ({ course, refreshData, edit = true }) => {
         {course?.courseOutput?.course?.chapters.map((chapter, index) => (
           <div
             key={index}
-            className="border p-5 rounded-lg mb-2 flex items-center justify-between"
+            className="border p-5 rounded-lg mb-2 flex items-center justify-between bg-white dark:bg-gray-800"
           >
             <div className="flex gap-5 items-center">
               <h2 className="bg-primary h-10 w-10 text-white rounded-full text-center p-2 flex-none">
                 {index + 1}
               </h2>
               <div className="">
-                <h2 className="font-medium text-lg">
+                <h2 className="font-medium text-lg text-black dark:text-white">
                   {chapter?.name}{" "}
                   {edit && (
                     <EditChapters
@@ -27,13 +27,15 @@ const ChapterList = ({ course, refreshData, edit = true }) => {
                     />
                   )}
                 </h2>
-                <p className="text-sm text-gary-500">{chapter?.about}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {chapter?.about}
+                </p>
                 <p className="flex gap-2 text-primary items-center">
                   <HiOutlineClock /> {chapter?.duration}
                 </p>
               </div>
             </div>
-            <HiOutlineCheckCircle className="text-4xl text-gray-300 flex-none" />
+            <HiOutlineCheckCircle className="text-4xl text-gray-300 flex-none dark:text-gray-500" />
           </div>
         ))}
       </div>

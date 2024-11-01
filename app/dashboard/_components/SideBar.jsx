@@ -14,9 +14,7 @@ import {
 } from "react-icons/hi2";
 
 const SideBar = () => {
-  const { userCourseList, setUserCourseList } = useContext(
-    UserCourseListContext
-  );
+  const { userCourseList } = useContext(UserCourseListContext);
 
   const Menu = [
     {
@@ -48,20 +46,23 @@ const SideBar = () => {
   const path = usePathname();
 
   return (
-    <div className="fixed h-full md:w-64 p-5 shadow-md">
+    <div className="fixed h-full md:w-64 p-5 shadow-md bg-white dark:bg-gray-800">
       {/* Logo */}
       <div className="flex items-center gap-2">
-        <BookKey className="w-7 h-7 text-primary" />
-        <span className="text-2xl font-[700] text-gray-700 ">LearnQuest</span>
+        <BookKey className="w-7 h-7 text-primary dark:text-white" />
+        <span className="text-2xl font-[700] text-gray-700 dark:text-gray-200">
+          LearnQuest
+        </span>
       </div>
-      <hr className="my-5" />
+      <hr className="my-5 border-gray-300 dark:border-gray-600" />
 
       <ul>
         {Menu.map((item, index) => (
           <Link key={index} href={item.path}>
             <div
-              className={`flex items-center gap-2 text-gray-600 p-3 cursor-pointer hover:bg-gray-100 hover:text-black rounded-lg mb-3 ${
-                item.path == path && "bg-gray-100 text-black"
+              className={`flex items-center gap-2 text-gray-600 p-3 cursor-pointer hover:bg-gray-100 hover:text-black rounded-lg mb-3 dark:text-gray-300 dark:hover:bg-gray-700 ${
+                item.path === path &&
+                "bg-gray-100 text-black dark:bg-gray-700 dark:text-white"
               }`}
             >
               <div className="text-2xl">{item.icon}</div>
@@ -73,10 +74,10 @@ const SideBar = () => {
 
       <div className="absolute bottom-10 w-[80%]">
         <Progress value={(userCourseList?.length / 5) * 100} />
-        <h2 className="text-sm my-2 mt-5">
+        <h2 className="text-sm my-2 mt-5 text-gray-700 dark:text-gray-300">
           {userCourseList?.length} Out of 5 Courses created
         </h2>
-        <h2 className="text-xs text-gray-500">
+        <h2 className="text-xs text-gray-500 dark:text-gray-400">
           Upgrade your plan for unlimited course generation
         </h2>
       </div>

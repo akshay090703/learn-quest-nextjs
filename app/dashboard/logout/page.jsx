@@ -20,7 +20,9 @@ const Logout = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <h1 className="text-xl">Logging You Out....</h1>
+      <h1 className="text-xl text-gray-800 dark:text-gray-200">
+        Logging You Out....
+      </h1>
     </div>
   );
 };

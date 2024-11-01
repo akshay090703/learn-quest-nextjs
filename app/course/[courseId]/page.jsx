@@ -31,7 +31,7 @@ const Course = ({ params }) => {
   };
 
   return (
-    <div>
+    <div className="bg-background text-foreground dark:bg-background dark:text-foreground">
       <Header />
       <div className="px-10 p-10 md:px-20 lg:px-44">
         <button

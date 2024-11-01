@@ -29,8 +29,8 @@ function CourseCard({ course, refreshData, displayUser = false }) {
   };
 
   return (
-    <Link href={"/course/" + course?.courseId}>
-      <div className="shadow-sm rounded-lg border p-2 hover:border-primary cursor-pointer mt-4">
+    <div className="shadow-sm rounded-lg border p-2 hover:border-primary cursor-pointer mt-4 dark:bg-gray-800 dark:border-gray-700">
+      <Link href={"/course/" + course?.courseId}>
         <Image
           src={course?.courseBanner}
           alt="Course Banner"
@@ -38,43 +38,45 @@ function CourseCard({ course, refreshData, displayUser = false }) {
           height={200}
           className="w-full h-[200px] rounded-lg object-cover"
         />
+      </Link>
 
-        <div className="p-2">
-          {!displayUser && (
-            <h2 className="font-medium text-lg flex justify-between items-center">
-              {course?.courseOutput?.course?.name}
-              <DropdownOption handleOnDelete={() => handleOnDelete()}>
-                <HiMiniEllipsisVertical />
-              </DropdownOption>
-            </h2>
-          )}
-          <p className="text-sm text-gray-400 my-1">{course?.category}</p>
+      <div className="p-2">
+        {!displayUser && (
+          <h2 className="font-medium text-lg flex justify-between items-center dark:text-white">
+            {course?.courseOutput?.course?.name}
+            <DropdownOption handleOnDelete={() => handleOnDelete()}>
+              <HiMiniEllipsisVertical />
+            </DropdownOption>
+          </h2>
+        )}
+        <p className="text-sm text-gray-400 my-1 dark:text-gray-300 ">
+          {course?.category}
+        </p>
 
-          <div className="flex items-center justify-between ">
-            <h2 className="flex gap-2 items-center p-1 bg-purple-50 text-primary rounded-sm text-sm">
-              <HiOutlineBookOpen />
-              {course?.courseOutput?.course?.noOfChapters} Chapters
-            </h2>
-            <h2 className="text-sm bg-purple-50 text-primary p-1 rounded-sm">
-              {course?.level}
-            </h2>
-          </div>
-
-          {displayUser && (
-            <div className="flex gap-2 items-center mt-2">
-              <Image
-                src={course?.userProfileImage}
-                width={35}
-                height={35}
-                alt="user image"
-                className="rounded-full"
-              />
-              <h2 className="text-sm">{course?.createdBy}</h2>
-            </div>
-          )}
+        <div className="flex items-center justify-between">
+          <h2 className="flex gap-2 items-center p-1 bg-purple-50 text-primary rounded-sm text-sm dark:bg-purple-900 dark:text-purple-50">
+            <HiOutlineBookOpen />
+            {course?.courseOutput?.course?.noOfChapters} Chapters
+          </h2>
+          <h2 className="text-sm bg-purple-50 text-primary p-1 rounded-sm dark:bg-purple-900 dark:text-purple-50">
+            {course?.level}
+          </h2>
         </div>
+
+        {displayUser && (
+          <div className="flex gap-2 items-center mt-2">
+            <Image
+              src={course?.userProfileImage}
+              width={35}
+              height={35}
+              alt="user image"
+              className="rounded-full"
+            />
+            <h2 className="text-sm dark:text-gray-300">{course?.createdBy}</h2>
+          </div>
+        )}
       </div>
-    </Link>
+    </div>
   );
 }
 

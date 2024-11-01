@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { UserInputContext } from "@/app/_context/UserInputContext";
 
 const SelectOptions = () => {
@@ -24,8 +23,11 @@ const SelectOptions = () => {
   return (
     <div className="px-10 md:px-20 lg:px-44">
       <div className="grid grid-cols-2 gap-10">
-        <div className="">
-          <label htmlFor="difficulty" className="text-sm">
+        <div>
+          <label
+            htmlFor="difficulty"
+            className="text-sm text-gray-800 dark:text-gray-200"
+          >
             🤖 Difficulty Level
           </label>
           <Select
@@ -33,10 +35,10 @@ const SelectOptions = () => {
             onValueChange={(value) => handleInputChange("level", value)}
             defaultValue={userCourseInput?.level}
           >
-            <SelectTrigger className="">
+            <SelectTrigger className="dark:bg-gray-800 dark:border-gray-700">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
               <SelectItem value="Beginner">Beginner</SelectItem>
               <SelectItem value="Intermediate">Intermediate</SelectItem>
               <SelectItem value="Advance">Advance</SelectItem>
@@ -44,8 +46,11 @@ const SelectOptions = () => {
           </Select>
         </div>
 
-        <div className="">
-          <label htmlFor="duration" className="text-sm">
+        <div>
+          <label
+            htmlFor="duration"
+            className="text-sm text-gray-800 dark:text-gray-200"
+          >
             ⏱️ Course Duration
           </label>
           <Select
@@ -53,21 +58,21 @@ const SelectOptions = () => {
             onValueChange={(value) => handleInputChange("duration", value)}
             defaultValue={userCourseInput?.duration}
           >
-            <SelectTrigger className="">
+            <SelectTrigger className="dark:bg-gray-800 dark:border-gray-700">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
               <SelectItem value="1 Hour">1 Hour</SelectItem>
               <SelectItem value="2 Hours">2 Hours</SelectItem>
-              {/* <SelectItem value="More than 3 Hours">
-                More than 3 Hours
-              </SelectItem> */}
             </SelectContent>
           </Select>
         </div>
 
-        <div className="">
-          <label htmlFor="video" className="text-sm">
+        <div>
+          <label
+            htmlFor="video"
+            className="text-sm text-gray-800 dark:text-gray-200"
+          >
             📽️ Add Video
           </label>
           <Select
@@ -75,10 +80,10 @@ const SelectOptions = () => {
             onValueChange={(value) => handleInputChange("displayVideo", value)}
             defaultValue={userCourseInput?.displayVideo}
           >
-            <SelectTrigger className="">
+            <SelectTrigger className="dark:bg-gray-800 dark:border-gray-700">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
               <SelectItem value="Yes">Yes</SelectItem>
               <SelectItem value="No">No</SelectItem>
             </SelectContent>
@@ -86,26 +91,21 @@ const SelectOptions = () => {
         </div>
 
         <div>
-          <label htmlFor="chapters" className="text-sm">
+          <label
+            htmlFor="chapters"
+            className="text-sm text-gray-800 dark:text-gray-200"
+          >
             🎞️ No of Chapters
           </label>
-          {/* <Input
-            id="chapters"
-            type="number"
-            min="1"
-            max="10"
-            onChange={(e) => handleInputChange("noOfChapters", e.target.value)}
-            defaultValue={userCourseInput?.noOfChapters}
-          /> */}
           <Select
             id="chapters"
             onValueChange={(value) => handleInputChange("noOfChapters", value)}
             defaultValue={userCourseInput?.noOfChapters}
           >
-            <SelectTrigger className="">
+            <SelectTrigger className="dark:bg-gray-800 dark:border-gray-700">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
               <SelectItem value="1">1</SelectItem>
               <SelectItem value="2">2</SelectItem>
               <SelectItem value="3">3</SelectItem>

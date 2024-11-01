@@ -47,10 +47,10 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
   };
 
   return (
-    <div className="p-10 border rounded-xl shadow-sm mt-5 pb-2">
+    <div className="p-10 border rounded-xl shadow-sm mt-5 pb-2 bg-white dark:bg-gray-800">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <h2 className="font-bold text-3xl">
+          <h2 className="font-bold text-3xl text-gray-800 dark:text-white">
             {course?.courseOutput?.course?.name}
             {"  "}
             <span className="text-xl">
@@ -62,10 +62,10 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
               )}
             </span>
           </h2>
-          <p className="text-sm text-gray-400 mt-3">
+          <p className="text-sm text-gray-400 mt-3 dark:text-gray-300">
             {course?.courseOutput?.course?.description}
           </p>
-          <h2 className="font-medium mt-2 flex gap-2 items-center text-primary">
+          <h2 className="font-medium mt-2 flex gap-2 items-center text-primary dark:text-primary-light">
             <HiOutlinePuzzle /> {course?.category}
           </h2>
           {!edit && (

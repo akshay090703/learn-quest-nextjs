@@ -41,7 +41,6 @@ const EditCourseBasicInfo = ({ course, refreshData }) => {
       .returning({ id: CourseList.id });
 
     refreshData(true);
-    // console.log(result);
   };
 
   return (
@@ -49,7 +48,7 @@ const EditCourseBasicInfo = ({ course, refreshData }) => {
       <DialogTrigger>
         <HiPencilSquare />
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="bg-card text-card-foreground dark:bg-card dark:text-card-foreground">
         <DialogHeader>
           <DialogTitle>Edit Course Title & Description</DialogTitle>
           <DialogDescription>
@@ -59,6 +58,7 @@ const EditCourseBasicInfo = ({ course, refreshData }) => {
                 id="title"
                 defaultValue={course?.courseOutput?.course?.name}
                 onChange={(e) => setName(e?.target.value)}
+                className="dark:bg-input dark:text-foreground"
               />
             </div>
             <div className="mt-2">
@@ -66,7 +66,7 @@ const EditCourseBasicInfo = ({ course, refreshData }) => {
               <Textarea
                 id="description"
                 defaultValue={course?.courseOutput?.course?.description}
-                className="h-40"
+                className="h-40 dark:bg-input dark:text-foreground"
                 onChange={(e) => setDescription(e?.target.value)}
               />
             </div>

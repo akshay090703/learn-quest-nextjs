@@ -26,11 +26,6 @@ const CreateCourse = () => {
   const { user } = useUser();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   console.log(userCourseInput);
-  // }, [userCourseInput]);
-
-  // Used to check if the next button should be enabled or not
   const checkStatus = () => {
     if (userCourseInput?.length == 0) {
       return true;
@@ -115,7 +110,7 @@ The json format should be like the following:
       icon: <HiLightBulb />,
     },
     {
-      id: 1,
+      id: 3,
       name: "Options",
       icon: <HiClipboardDocumentCheck />,
     },
@@ -132,19 +127,22 @@ The json format should be like the following:
             <div key={index} className="flex items-center">
               <div className="flex flex-col items-center w-[50px] md:w-[100px]">
                 <div
-                  className={`bg-gray-200 p-3 rounded-full text-white ${
-                    activeIndex >= index && "bg-primary"
+                  className={`bg-gray-200 p-3 rounded-full text-white dark:bg-gray-700 dark:text-gray-200 ${
+                    activeIndex >= index && "bg-primary dark:bg-primary-light"
                   }`}
                 >
                   {item.icon}
                 </div>
-                <h2 className="hidden md:block md:text-sm">{item.name}</h2>
+                <h2 className="hidden md:block md:text-sm text-gray-800 dark:text-gray-200">
+                  {item.name}
+                </h2>
               </div>
 
-              {index != StepperOptions?.length - 1 && (
+              {index !== StepperOptions.length - 1 && (
                 <div
-                  className={`h-1 w-[50px] md:w-[100px] rounded-full lg:w-[170px] bg-gray-300 ${
-                    activeIndex - 1 >= index && "bg-primary"
+                  className={`h-1 w-[50px] md:w-[100px] rounded-full lg:w-[170px] bg-gray-300 dark:bg-gray-600 ${
+                    activeIndex - 1 >= index &&
+                    "bg-primary dark:bg-primary-light"
                   }`}
                 ></div>
               )}
@@ -155,9 +153,9 @@ The json format should be like the following:
 
       <div className="px-10 md:px-20 lg:px-44 mt-10">
         {/* Component */}
-        {activeIndex == 0 ? (
+        {activeIndex === 0 ? (
           <SelectCategory />
-        ) : activeIndex == 1 ? (
+        ) : activeIndex === 1 ? (
           <TopicDescription />
         ) : (
           <SelectOptions />
@@ -166,7 +164,7 @@ The json format should be like the following:
         {/* Next Previous Button */}
         <div className="flex justify-between mt-10">
           <Button
-            disabled={activeIndex == 0}
+            disabled={activeIndex === 0}
             onClick={() => setActiveIndex(activeIndex - 1)}
             variant="outline"
           >
@@ -180,7 +178,7 @@ The json format should be like the following:
               Next
             </Button>
           )}
-          {activeIndex == 2 && (
+          {activeIndex === 2 && (
             <Button
               disabled={checkStatus()}
               onClick={() => GenerateCourseLayout()}

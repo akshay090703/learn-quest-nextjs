@@ -11,13 +11,13 @@ import { UserCourseListContext } from "@/app/_context/UserCourseListContext";
 function UserCourseList() {
   const { user } = useUser();
   const [courseList, setCourseList] = useState([]);
-  const { userCourseList, setUserCourseList } = useContext(
-    UserCourseListContext
-  );
+  const { setUserCourseList } = useContext(UserCourseListContext);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    user && getUserCourses();
+    if (user) {
+      getUserCourses();
+    }
   }, [user]);
 
   const getUserCourses = async () => {
@@ -29,31 +29,31 @@ function UserCourseList() {
         eq(CourseList?.createdBy, user?.primaryEmailAddress?.emailAddress)
       );
 
-    console.log(result);
     setCourseList(result);
     setUserCourseList(result);
-
     setLoading(false);
   };
 
   return (
     <div className="mt-10">
-      <h2 className="font-medium text-xl ">My AI Courses</h2>
+      <h2 className="font-medium text-xl text-gray-800 dark:text-gray-200">
+        My AI Courses
+      </h2>
 
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {courseList?.length > 0
-          ? courseList?.map((course, index) => (
+        {courseList.length > 0
+          ? courseList.map((course, index) => (
               <CourseCard
                 course={course}
                 key={index}
-                refreshData={() => getUserCourses()}
+                refreshData={getUserCourses}
               />
             ))
           : loading &&
             [1, 2, 3, 4, 5].map((item, index) => (
               <div
                 key={index}
-                className="w-full bg-slate-200 animate-pulse rounded-lg h-[270px] mt-5"
+                className="w-full bg-slate-200 dark:bg-slate-700 animate-pulse rounded-lg h-[270px] mt-5"
               ></div>
             ))}
       </div>

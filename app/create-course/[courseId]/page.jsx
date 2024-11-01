@@ -62,8 +62,6 @@ const CourseLayout = ({ params }) => {
         const result = await AiGenerateChapterContent.sendMessage(PROMPT);
         const content = JSON.parse(result.response?.text());
 
-        // console.log(result.response?.text());
-
         // Save Chapter Content + Video URL
         await db.insert(Chapters).values({
           chapterId: index,
@@ -90,7 +88,7 @@ const CourseLayout = ({ params }) => {
   };
 
   return (
-    <div className="mt-10 px-7 md:px-20 lg:px-44">
+    <div className="mt-10 px-7 md:px-20 lg:px-44 bg-background text-foreground dark:bg-background dark:text-foreground">
       <h2 className="font-bold text-center text-2xl">Course Layout</h2>
 
       <LoadingDialog loading={loading} />
@@ -98,13 +96,13 @@ const CourseLayout = ({ params }) => {
       {/* Basic Info */}
       <CourseBasicInfo course={course} refreshData={() => getCourse()} />
 
-      {/* COurse Details */}
+      {/* Course Details */}
       <CourseDetail course={course} />
 
       {/* List of Lesson */}
       <ChapterList course={course} refreshData={() => getCourse()} />
 
-      <Button onClick={GenerateChapterContent} className="my-10">
+      <Button onClick={GenerateChapterContent} className="my-10 ">
         Generate Course Content
       </Button>
     </div>
