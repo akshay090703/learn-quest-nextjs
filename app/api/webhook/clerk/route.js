@@ -1,20 +1,13 @@
 import { db } from "@/config/db";
 import { users } from "@/config/schema";
 import { eq } from "drizzle-orm";
-import { buffer } from "micro";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
 export async function POST(req) {
-  const payload = (await buffer(req)).toString();
+  const payload = req.body;
   const headers = req.headers;
   const wh = new Webhook(CLERK_WEBHOOK_SECRET);
 
