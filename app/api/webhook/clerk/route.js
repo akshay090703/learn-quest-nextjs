@@ -12,17 +12,17 @@ if (!CLERK_WEBHOOK_SECRET) {
 
 export async function POST(req) {
   try {
-    const payload = await req.json();
+    const payload = (await buffer(req)).toString();
     const headers = req.headers;
 
-    const svixHeaders = {
-      "svix-id": headers.get("svix-id"),
-      "svix-timestamp": headers.get("svix-timestamp"),
-      "svix-signature": headers.get("svix-signature"),
-    };
+    // const svixHeaders = {
+    //   "svix-id": headers.get("svix-id"),
+    //   "svix-timestamp": headers.get("svix-timestamp"),
+    //   "svix-signature": headers.get("svix-signature"),
+    // };
 
     const wh = new Webhook(CLERK_WEBHOOK_SECRET);
-    const body = wh.verify(payload, svixHeaders);
+    const body = wh.verify(payload, headers);
 
     console.log("🔹 Webhook received:", body);
 
