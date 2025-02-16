@@ -17,6 +17,17 @@ export const subscriptionStatusEnum = pgEnum("subscription_status", [
   "expired",
 ]);
 
+export const subscriptionType = pgEnum("subscription_type", [
+  "monthly",
+  "annual",
+]);
+
+export const paymentStatusEnum = pgEnum("payment_status", [
+  "Success",
+  "Failed",
+  "Pending",
+]);
+
 export const CourseList = pgTable("courseList", {
   id: serial("id").primaryKey(),
   courseId: varchar("courseId").notNull(),
@@ -64,4 +75,18 @@ export const subscriptions = pgTable("subscriptions", {
   status: subscriptionStatusEnum("status").notNull(),
   startDate: timestamp("start_date"),
   endDate: timestamp("end_date"),
+  type: subscriptionType("type").notNull(),
+});
+
+export const payments = pgTable("payments", {
+  id: varchar("id").primaryKey(), // Razorpay payment id
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  orderId: varchar("order_id").notNull(),
+  amount: integer("amount").notNull(),
+  status: varchar("status").notNull(),
+  failureReason: varchar("failure_reason").default(null),
+  errorCode: varchar("error_code").default(null),
+  createdAt: timestamp("created_at").defaultNow(),
 });
