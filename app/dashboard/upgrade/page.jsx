@@ -16,10 +16,12 @@ import Script from "next/script";
 import axios from "axios";
 import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
+import { useSubscription } from "@/app/_context/SubscriptionContext";
 
 export default function UpgradePage() {
   const [annualBilling, setAnnualBilling] = useState(false);
   const { user } = useUser();
+  const { isActive, status, refetch } = useSubscription();
 
   const plans = [
     {
@@ -41,13 +43,13 @@ export default function UpgradePage() {
         "Advanced customization options",
         "Priority support",
       ],
-      buttonText: "Upgrade to Pro",
-      disabled: false,
+      buttonText: isActive ? `Plan: ${status}` : "Upgrade to Pro",
+      disabled: isActive,
     },
   ];
 
   const createOrder = async () => {
-    const amount = annualBilling ? 2 : 1;
+    const amount = annualBilling ? 960 : 100;
     const clerkUserId = user?.id;
     const typeOfPlan = annualBilling ? "annual" : "monthly";
 
@@ -90,6 +92,8 @@ export default function UpgradePage() {
     } catch (error) {
       console.error("Error creating order:", error);
       toast.error("Payment failed!");
+    } finally {
+      refetch();
     }
   };
 
@@ -101,9 +105,7 @@ export default function UpgradePage() {
       />
 
       <div className="container mx-auto px-4 py-16">
-        <h1 className="text-4xl font-bold text-center mb-8">
-          Upgrade Your Plan
-        </h1>
+        <h1 className="text-4xl font-bold text-center mb-8">Buy Your Plan</h1>
         <div className="flex justify-center items-center mb-8">
           <span className="mr-3 text-sm font-medium">Monthly Billing</span>
           <Switch

@@ -1,6 +1,7 @@
 "use client";
 
-import { UserCourseListContext } from "@/app/_context/UserCourseListContext";
+import { useSubscription } from "@/app/_context/SubscriptionContext";
+import { useUserCourseList } from "@/app/_context/UserCourseListContext";
 import { Progress } from "@/components/ui/progress";
 import { BookKey } from "lucide-react";
 import Link from "next/link";
@@ -14,7 +15,8 @@ import {
 } from "react-icons/hi2";
 
 const SideBar = () => {
-  const { userCourseList } = useContext(UserCourseListContext);
+  const { userCourseList } = useUserCourseList();
+  const { isActive } = useSubscription();
 
   const Menu = [
     {
@@ -73,13 +75,24 @@ const SideBar = () => {
       </ul>
 
       <div className="absolute bottom-10 w-[80%]">
-        <Progress value={(userCourseList?.length / 5) * 100} />
-        <h2 className="text-sm my-2 mt-5 text-gray-700 dark:text-gray-300">
-          {userCourseList?.length} Out of 5 Courses created
-        </h2>
-        <h2 className="text-xs text-gray-500 dark:text-gray-400">
-          Upgrade your plan for unlimited course generation
-        </h2>
+        {isActive ? (
+          <>
+            <h2 className="text-primary text-lg">Premium Member</h2>
+            <p className="text-gray-600 text-sm">
+              You have access to all features
+            </p>
+          </>
+        ) : (
+          <>
+            <Progress value={(userCourseList?.length / 5) * 100} />
+            <h2 className="text-sm my-2 mt-5 text-gray-700 dark:text-gray-300">
+              {userCourseList?.length} Out of 5 Courses created
+            </h2>
+            <h2 className="text-xs text-gray-500 dark:text-gray-400">
+              Upgrade your plan for unlimited course generation
+            </h2>
+          </>
+        )}
       </div>
     </div>
   );

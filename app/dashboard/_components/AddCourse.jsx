@@ -1,6 +1,7 @@
 "use client";
 
-import { UserCourseListContext } from "@/app/_context/UserCourseListContext";
+import { useSubscription } from "@/app/_context/SubscriptionContext";
+import { useUserCourseList } from "@/app/_context/UserCourseListContext";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
@@ -8,9 +9,8 @@ import React, { useContext } from "react";
 
 function AddCourse() {
   const { user } = useUser();
-  const { userCourseList, setUserCourseList } = useContext(
-    UserCourseListContext
-  );
+  const { userCourseList, setUserCourseList } = useUserCourseList();
+  const { isActive } = useSubscription();
 
   return (
     <div className="flex items-center justify-between">
@@ -24,7 +24,11 @@ function AddCourse() {
       </div>
       <Link
         href={
-          userCourseList?.length >= 5 ? "/dashboard/upgrade" : "/create-course"
+          !isActive
+            ? userCourseList?.length >= 5
+              ? "/dashboard/upgrade"
+              : "/create-course"
+            : "/create-course"
         }
       >
         <Button>+ Create AI Course</Button>

@@ -10,6 +10,21 @@ if (!RAZORPAY_WEBHOOK_SECRET) {
   console.error("❌ RAZORPAY_WEB_SECRET environment variable is not set.");
 }
 
+function getEndTime(plan) {
+  const now = new Date();
+  const daysInMonth = 30;
+  const daysInYear = 365;
+
+  let endTime;
+  if (plan === "monthly") {
+    endTime = new Date(now.getTime() + daysInMonth * 24 * 60 * 60 * 1000);
+  } else {
+    endTime = new Date(now.getTime() + daysInYear * 24 * 60 * 60 * 1000);
+  }
+
+  return endTime;
+}
+
 export async function POST(req) {
   try {
     const rawBody = await req.text();
@@ -20,86 +35,109 @@ export async function POST(req) {
       signature,
       RAZORPAY_WEBHOOK_SECRET
     );
+
     if (!isValid) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
 
     const event = JSON.parse(rawBody);
-    // console.log("🔹 Razorpay Webhook Event:", event);
+    const { event: eventType, payload } = event;
+    const paymentEntity = payload.payment.entity;
+    const {
+      id,
+      order_id,
+      amount,
+      status,
+      notes,
+      error_code,
+      error_description,
+    } = paymentEntity;
 
-    if (event.event === "payment.captured") {
-      const { id, order_id, amount, status, notes } =
-        event.payload.payment.entity;
-      const clerkUserId = notes?.userId;
+    const clerkUserId = notes?.userId;
+    const planType = notes?.typeOfPlan;
 
-      if (!clerkUserId) {
-        console.error("❌ Missing clerkUserId in payment notes");
-        return NextResponse.json(
-          { error: "Missing clerkUserId" },
-          { status: 400 }
-        );
-      }
+    if (!clerkUserId) {
+      console.error("❌ Missing clerkUserId in payment notes");
+      return NextResponse.json(
+        { error: "Missing clerkUserId" },
+        { status: 400 }
+      );
+    }
 
-      const user = await db
-        .select()
-        .from(users)
-        .where(eq(users.clerkUserId, clerkUserId))
-        .limit(1);
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.clerkUserId, clerkUserId))
+      .limit(1);
 
-      if (user.length === 0) {
-        console.error("❌ No user found with clerkUserId:", clerkUserId);
-        return NextResponse.json({ error: "User not found" }, { status: 404 });
-      }
+    if (user.length === 0) {
+      console.error("❌ No user found with clerkUserId:", clerkUserId);
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
-      // Store successful payment in DB
+    const userId = user[0].id;
+
+    if (eventType === "payment.captured") {
       await db.insert(payments).values({
         id,
-        userId: user[0].id,
+        userId,
         orderId: order_id,
         amount: amount / 100, // Convert paise to INR
         status,
       });
 
-      console.log(`✅ Payment recorded for user: ${clerkUserId}`);
+      const existingSubscription = await db
+        .select()
+        .from(subscriptions)
+        .where(eq(subscriptions.userId, userId))
+        .limit(1);
+
+      if (existingSubscription.length > 0) {
+        const newEndTime = new Date(existingSubscription[0].endDate);
+        const extensionTime = getEndTime(planType);
+
+        if (existingSubscription[0].status === "active") {
+          newEndTime.setTime(newEndTime.getTime() + extensionTime);
+
+          await db
+            .update(subscriptions)
+            .set({ endDate: newEndTime })
+            .where(eq(subscriptions.userId, userId));
+
+          console.log(`🔄 Subscription extended for user: ${clerkUserId}`);
+        } else if (existingSubscription[0].status === "expired") {
+          await db
+            .update(subscriptions)
+            .set({
+              startDate: new Date(),
+              endDate: new Date() + extensionTime,
+            })
+            .where(eq(subscriptions.userId, userId));
+
+          console.log(`🔄 Subscription restarted for user: ${clerkUserId}`);
+        }
+      } else {
+        await db.insert(subscriptions).values({
+          userId,
+          razorpaySubscriptionId: id,
+          type: planType,
+          startDate: new Date(),
+          endDate: getEndTime(planType),
+          status: "active",
+        });
+
+        console.log(`✅ New subscription created for user: ${clerkUserId}`);
+      }
+
       return NextResponse.json(
         { message: "Payment successful" },
         { status: 200 }
       );
-    } else if (event.event === "payment.failed") {
-      const {
-        id,
-        order_id,
-        amount,
-        status,
-        notes,
-        error_code,
-        error_description,
-      } = event.payload.payment.entity;
-      const clerkUserId = notes?.userId;
-
-      if (!clerkUserId) {
-        console.error("❌ Missing clerkUserId in payment notes");
-        return NextResponse.json(
-          { error: "Missing clerkUserId" },
-          { status: 400 }
-        );
-      }
-
-      const user = await db
-        .select()
-        .from(users)
-        .where(eq(users.clerkUserId, clerkUserId))
-        .limit(1);
-
-      if (user.length === 0) {
-        console.error("❌ No user found with clerkUserId:", clerkUserId);
-        return NextResponse.json({ error: "User not found" }, { status: 404 });
-      }
-
-      // Store failed payment in DB
+    } else if (eventType === "payment.failed") {
+      // ⚠️ Transaction for failed payment
       await db.insert(payments).values({
         id,
-        userId: user[0].id,
+        userId,
         orderId: order_id,
         amount: amount / 100,
         status: "failed",

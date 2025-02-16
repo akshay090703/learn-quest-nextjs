@@ -4,6 +4,8 @@ import "./globals.css";
 import { ClerkProvider, GoogleOneTap } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SubscriptionProvider } from "./_context/SubscriptionContext";
+import { UserCourseListProvider } from "./_context/UserCourseListContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,13 +36,17 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <body
-            // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            className={outift.className}
-          >
-            <Toaster position="top-center" />
-            {children}
-          </body>
+          <SubscriptionProvider>
+            <UserCourseListProvider>
+              <body
+                // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                className={outift.className}
+              >
+                <Toaster position="top-center" />
+                {children}
+              </body>
+            </UserCourseListProvider>
+          </SubscriptionProvider>
         </ThemeProvider>
       </html>
     </ClerkProvider>

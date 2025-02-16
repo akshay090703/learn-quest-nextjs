@@ -6,12 +6,12 @@ import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import React, { useContext, useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
-import { UserCourseListContext } from "@/app/_context/UserCourseListContext";
+import { useUserCourseList } from "@/app/_context/UserCourseListContext";
 
 function UserCourseList() {
   const { user } = useUser();
   const [courseList, setCourseList] = useState([]);
-  const { setUserCourseList } = useContext(UserCourseListContext);
+  const { setUserCourseList } = useUserCourseList();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -30,7 +30,6 @@ function UserCourseList() {
       );
 
     setCourseList(result);
-    setUserCourseList(result);
     setLoading(false);
   };
 
