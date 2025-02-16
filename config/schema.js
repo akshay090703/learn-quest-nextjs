@@ -48,6 +48,7 @@ export const users = pgTable("users", {
   email: varchar("email").unique().notNull(),
   clerkUserId: varchar("clerk_user_id").unique().notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const subscriptions = pgTable("subscriptions", {
