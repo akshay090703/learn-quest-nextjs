@@ -2,10 +2,20 @@ import {
   boolean,
   integer,
   json,
+  numeric,
+  pgEnum,
   pgTable,
   serial,
+  text,
+  timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+
+export const subscriptionStatusEnum = pgEnum("subscription_status", [
+  "active",
+  "canceled",
+  "expired",
+]);
 
 export const CourseList = pgTable("courseList", {
   id: serial("id").primaryKey(),
@@ -30,4 +40,27 @@ export const Chapters = pgTable("chapters", {
   chapterId: integer("chapterId").notNull(),
   content: json("content").notNull(),
   videoId: varchar("videoId").notNull(),
+});
+
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  email: varchar("email").unique().notNull(),
+  clerkUserId: varchar("clerk_user_id").unique().notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const subscriptions = pgTable("subscriptions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .references(() => users.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  razorpaySubscriptionId: varchar("razorpay_subscription_id")
+    .unique()
+    .notNull(),
+  status: subscriptionStatusEnum("status").notNull(),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
 });
