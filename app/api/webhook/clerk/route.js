@@ -1,19 +1,26 @@
 import { db } from "@/config/db";
 import { users } from "@/config/schema";
 import { eq } from "drizzle-orm";
+import { buffer } from "micro";
 import { NextResponse } from "next/server";
+import { Webhook } from "svix";
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
 export async function POST(req) {
+  const payload = (await buffer(req)).toString();
+  const headers = req.headers;
+  const wh = new Webhook(CLERK_WEBHOOK_SECRET);
+
   try {
-    const clerkSignature = req.headers.get("clerk-signature");
-
-    if (clerkSignature !== CLERK_WEBHOOK_SECRET) {
-      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
-    }
-
-    const body = await req.json();
+    const body = wh.verify(payload, headers);
+    console.log(body);
 
     const { type, data } = body;
 
