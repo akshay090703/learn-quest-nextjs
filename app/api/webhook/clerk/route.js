@@ -6,34 +6,51 @@ import { Webhook } from "svix";
 
 const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
-export async function POST(req) {
-  const payload = req.body;
-  const headers = req.headers;
-  const wh = new Webhook(CLERK_WEBHOOK_SECRET);
+if (!CLERK_WEBHOOK_SECRET) {
+  console.error("❌ CLERK_WEBHOOK_SECRET is undefined");
+}
 
+export async function POST(req) {
   try {
-    const body = wh.verify(payload, headers);
-    console.log(body);
+    const payload = await req.json();
+    const headers = req.headers;
+
+    const svixHeaders = {
+      "svix-id": headers.get("svix-id"),
+      "svix-timestamp": headers.get("svix-timestamp"),
+      "svix-signature": headers.get("svix-signature"),
+    };
+
+    const wh = new Webhook(CLERK_WEBHOOK_SECRET);
+    const body = wh.verify(payload, svixHeaders);
+
+    console.log("🔹 Webhook received:", body);
 
     const { type, data } = body;
 
     if (type === "user.created") {
       await db.insert(users).values({
-        name: data.first_name + " " + data.last_name || "Unknown",
+        name:
+          data.first_name && data.last_name
+            ? `${data.first_name} ${data.last_name}`
+            : "Unknown",
         email: data.email_addresses[0].email_address,
         clerkUserId: data.id,
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at),
       });
 
-      console.log("User created: ", data.email_addresses[0].email_address);
+      console.log("✅ User created:", data.email_addresses[0].email_address);
     } else if (type === "user.updated") {
       await db
         .update(users)
         .set({
-          name: data.first_name + " " + data.last_name || "Unknown",
+          name:
+            data.first_name && data.last_name
+              ? `${data.first_name} ${data.last_name}`
+              : "Unknown",
           email: data.email_addresses[0].email_address,
-          updatedAt: data.updated_at,
+          updatedAt: new Date(data.updated_at),
         })
         .where(eq(users.clerkUserId, data.id));
 
@@ -43,6 +60,8 @@ export async function POST(req) {
 
       console.log("❌ User deleted:", data.id);
     }
+
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error("❌ Clerk Webhook Error:", error);
     return NextResponse.json(
